@@ -1,0 +1,77 @@
+﻿@model IEnumerable<AttaBoyGameStore.Models.CartLine>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h1>Cart</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                Price Per
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                Total Price
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if (item.Product.Image != null)
+                {
+                    <img
+                        src="~/img/products/@item.Product.Image"
+                        alt="Photo of @item.Product.Name"
+                        class="thumbnail"
+                    />
+                }
+            </td>
+            <td>
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.Id">
+                    @item.Product.Name
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Price)
+            </td>
+            <td>
+                <form method="POST" action="/Shop/UpdateCart">
+                    <input type="hidden" id="CartLineId" name="CartLineId" value="@item.Id" />
+
+                    <input id="Quantity" name="Quantity" type="number" required value="@item.Quantity" min="1" max="999" />
+                    <button class="btn btn-primary btn-sm">Update</button>
+                </form>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <form method="POST" action="/Shop/RemoveFromCart">
+                    <input type="hidden" id="CartLineId" name="CartLineId" value="@item.Id" />
+                    
+                    <button class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<h4>Total: @ViewData["TotalPrice"]</h4>
+
+<a class="btn btn-success" asp-controller="Shop" asp-action="Checkout">Checkout</a>
+
