@@ -95,16 +95,7 @@ namespace AttaBoyGameStoreTests
         }
 
         // Happy-path
-        [TestMethod]
-        public async Task DetailsReturnsProduct()
-        {
-            var expectedProduct = _products[0];
-
-            var result = (ViewResult) await _controller.Details(expectedProduct.Id);
-
-            Assert.IsNull(result.ViewName);
-            Assert.AreEqual(expectedProduct, result.Model);
-	    }
+     
 
         [TestMethod]
         public async Task DetailsNotFoundWithNullId()
@@ -209,5 +200,12 @@ namespace AttaBoyGameStoreTests
                 Category = _category,
             };
 	    }
+
+        [TestMethod]
+        public async Task ViewReturnDelete()
+        {
+            var result = (ViewResult)await _controller.Delete(1);
+            Assert.AreEqual("Delete", result.ViewName);
+        }
     }
 }

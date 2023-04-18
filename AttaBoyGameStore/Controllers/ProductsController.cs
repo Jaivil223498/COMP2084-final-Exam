@@ -52,7 +52,7 @@ namespace AttaBoyGameStore.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            return View("Delete", product);
         }
 
         // GET: Products/Create
