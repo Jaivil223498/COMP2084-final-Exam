@@ -200,12 +200,46 @@ namespace AttaBoyGameStoreTests
                 Category = _category,
             };
 	    }
-
+        
+        //question 8
         [TestMethod]
         public async Task ViewReturnDelete()
         {
             var result = (ViewResult)await _controller.Delete(1);
             Assert.AreEqual("Delete", result.ViewName);
+        }
+
+        //question 9
+
+        [TestMethod]
+        public async Task DeleteConfirmedFromDatabase()
+        {
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "DeleteProductFromDatabase")
+                .Options;
+
+            using (var context = new ApplicationDbContext(options)) {             
+                var product = new Product {
+                    Id = 1,
+                    Name = "New Product",
+                    Price = 100
+                };
+
+                context.Products.Add(product);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var controller = new ProductsController(context);
+
+                var deleteProduct = await context.Products.FindAsync(1);
+
+                var result = await controller.DeleteConfirmed(deleteProduct.Id);
+
+                Assert.IsFalse(context.Products.Any(p => p.Id == deleteProduct.Id));
+            }
         }
     }
 }
